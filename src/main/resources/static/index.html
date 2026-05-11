@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insurance AI System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .api-info {
+            background: #e8f4fd;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .endpoint {
+            background: #f8f9fa;
+            padding: 10px;
+            margin: 5px 0;
+            border-left: 4px solid #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Insurance AI System</h1>
+        <p>Welcome to the Insurance AI Document Processing System.</p>
+        
+        <div class="api-info">
+            <h3>Available API Endpoints:</h3>
+            <div class="endpoint">
+                <strong>POST /api/documents/upload</strong> - Upload insurance documents
+            </div>
+            <div class="endpoint">
+                <strong>POST /answer/generate</strong> - Generate AI-powered answers (requires question and documentId)
+            </div>
+            <div class="endpoint">
+                <strong>GET /api/answer/health</strong> - Check LLM service health and provider info
+            </div>
+            <div class="endpoint">
+                <strong>GET /api/answer/providers</strong> - List available LLM providers
+            </div>
+        </div>
+        
+        <div class="api-info">
+            <h3>Configuration</h3>
+            <p><strong>Prompts:</strong> Configured via <code>src/main/resources/prompts.properties</code></p>
+            <p><strong>LLM Provider:</strong> Set via <code>llm.provider</code> property in application.properties (default: openrouter)</p>
+            <p><strong>OpenRouter API:</strong> Configure <code>OPENROUTER_API_KEY</code> environment variable or <code>openrouter.api.key</code> in application.properties</p>
+            <p><strong>Model Selection:</strong> Choose from OpenRouter's model catalog (default: anthropic/claude-3-haiku)</p>
+        </div>
+        
+        <p>This system provides intelligent document processing capabilities for insurance documents.</p>
+    </div>
+</body>
+</html>

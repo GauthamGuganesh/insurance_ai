@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - Insurance AI System</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .error-container {
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+        .error-icon {
+            font-size: 64px;
+            color: #e74c3c;
+            margin-bottom: 20px;
+        }
+        .error-code {
+            font-size: 48px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        .error-message {
+            font-size: 18px;
+            color: #6c757d;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        .error-details {
+            font-size: 14px;
+            color: #868e96;
+            margin-bottom: 30px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #e9ecef;
+        }
+        .action-button {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+        }
+        .action-button:hover {
+            background: #5a67d8;
+        }
+        .timestamp {
+            font-size: 12px;
+            color: #adb5bd;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-icon">⚠️</div>
+        <div class="error-code" id="error-code">404</div>
+        <div class="error-message" id="error-message">Page Not Found</div>
+        <div class="error-details" id="error-details">
+            The page you are looking for might have been removed, had its name changed, 
+            or is temporarily unavailable. Please check the URL and try again.
+        </div>
+        <a href="/" class="action-button">Go to Homepage</a>
+        <div class="timestamp" id="timestamp"></div>
+    </div>
+
+    <script>
+        // Set current timestamp
+        document.getElementById('timestamp').textContent = 
+            'Error occurred at: ' + new Date().toLocaleString();
+        
+        // Get error details from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const errorCode = urlParams.get('code') || '404';
+        const errorMessage = urlParams.get('message') || 'Page Not Found';
+        const errorDetails = urlParams.get('details') || 
+            'The page you are looking for might have been removed, had its name changed, or is temporarily unavailable. Please check the URL and try again.';
+        
+        // Update error page content dynamically
+        document.getElementById('error-code').textContent = errorCode;
+        document.getElementById('error-message').textContent = errorMessage;
+        document.getElementById('error-details').textContent = errorDetails;
+        
+        // Update page title
+        document.title = `${errorCode} Error - Insurance AI System`;
+        
+        // Log error for debugging
+        console.error(`Error ${errorCode}: ${errorMessage}`, {
+            url: window.location.href,
+            userAgent: navigator.userAgent,
+            timestamp: new Date().toISOString()
+        });
+    </script>
+</body>
+</html>
