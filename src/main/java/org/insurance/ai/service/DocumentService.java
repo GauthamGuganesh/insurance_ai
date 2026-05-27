@@ -1,9 +1,12 @@
 package org.insurance.ai.service;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
 import org.insurance.ai.dto.DocumentUploadRequestDTO;
 import org.insurance.ai.model.Document;
 import org.insurance.ai.model.DocumentChunk;
+import org.insurance.ai.model.DocumentEmbedding;
+import org.insurance.ai.repository.DocumentEmbeddingRepository;
 import org.insurance.ai.repository.DocumentRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +35,13 @@ public class DocumentService {
 
     @Autowired
     private PdfExtractionService pdfExtractionService;
+	
+
+    @Autowired
+    private EmbeddingService embeddingService;
+
+    @Autowired
+    private DocumentEmbeddingRepository documentEmbeddingRepository;
 
     @Value("${app.upload.dir:uploads}")
     private String uploadDir;
@@ -79,6 +89,22 @@ public class DocumentService {
             try {
                 List<DocumentChunk> chunks = pdfExtractionService.extractAndChunkPdfContent(request.getFile(), savedDocument);
                 logger.info("PDF content extracted and chunked successfully for file: {} ({} chunks created)", originalFilename, chunks.size());
+
+                // Generate and store embeddings for each chunk
+                for (DocumentChunk chunk : chunks) {
+                    try {
+                        float[] embedding = embeddingService.generateEmbedding(chunk.getChunkText());
+                        DocumentEmbedding documentEmbedding = new DocumentEmbedding();
+                        documentEmbedding.setChunkId(chunk.getId());
+                        documentEmbedding.setEmbedding(embedding);
+                        documentEmbedding.setEmbeddingModel("all-minilm-l6-v2");
+                        documentEmbeddingRepository.save(documentEmbedding);
+                        logger.debug("Generated and stored embedding for chunk ID: {}", chunk.getId());
+                    } catch (Exception e) {
+                        logger.error("Failed to generate embedding for chunk ID {}: {}", chunk.getId(), e.getMessage());
+                    }
+                }
+                logger.info("Embeddings generated and stored for {} chunks", chunks.size());
             } catch (Exception e) {
                 logger.warn("Failed to extract and chunk PDF content from {}: {}", originalFilename, e.getMessage());
             }
