@@ -39,22 +39,33 @@
 <body>
     <div class="container">
         <h1>Insurance AI System</h1>
-        <p>Welcome to the Insurance AI Document Processing System.</p>
+        <p>Welcome to the Insurance Policy Intelligence System. This system uses advanced AI and vector similarity search to answer queries about insurance documents.</p>
         
         <div class="api-info">
             <h3>Available API Endpoints:</h3>
             <div class="endpoint">
-                <strong>POST /api/documents/upload</strong> - Upload insurance documents
+                <strong>POST /api/documents/upload</strong> - Upload insurance documents (PDFs are automatically chunked and embedded)
             </div>
             <div class="endpoint">
-                <strong>POST /answer/generate</strong> - Generate AI-powered answers (requires question and documentId)
+                <strong>POST /answer/generate</strong> - Generate AI-powered answers using document-based retrieval (requires question and documentId)
             </div>
             <div class="endpoint">
-                <strong>GET /api/answer/health</strong> - Check LLM service health and provider info
+                <strong>POST /answer/vector-search</strong> - Generate AI-powered answers using vector similarity search (requires question only)
             </div>
             <div class="endpoint">
-                <strong>GET /api/answer/providers</strong> - List available LLM providers
+                <strong>GET /answer/health</strong> - Check LLM service health and provider info
             </div>
+            <div class="endpoint">
+                <strong>GET /answer/providers</strong> - List available LLM providers
+            </div>
+        </div>
+        
+        <div class="api-info">
+            <h3>System Features</h3>
+            <p><strong>Document Processing:</strong> PDF extraction, intelligent chunking, and embedding generation using all-minilm-l6-v2 model</p>
+            <p><strong>Vector Search:</strong> Cosine similarity search to find the most relevant document chunks for any query</p>
+            <p><strong>Retrieval Logging:</strong> Detailed logging of retrieved chunk IDs and distance scores for transparency</p>
+            <p><strong>AI Answer Generation:</strong> Grounded answers using retrieved context from documents</p>
         </div>
         
         <div class="api-info">
@@ -65,7 +76,7 @@
             <p><strong>Model Selection:</strong> Choose from OpenRouter's model catalog (default: anthropic/claude-3-haiku)</p>
         </div>
         
-        <p>This system provides intelligent document processing capabilities for insurance documents.</p>
+        <p>This system provides intelligent document processing and question-answering capabilities for insurance policy documents using RAG (Retrieval-Augmented Generation).</p>
     </div>
 </body>
 </html>

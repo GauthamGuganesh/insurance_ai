@@ -13,9 +13,10 @@ public class DocumentChunk {
 	@JoinColumn(name = "document_id")
 	private Document document;
 
-	@Column(length = 5000)
+	@Column(name = "chunk_text")
 	private String chunkText;
 
+	@Column(name = "chunk_order")
 	private Integer chunkOrder;
 	
 	

@@ -1,8 +1,10 @@
 package org.insurance.ai.controller;
 
 import org.insurance.ai.dto.AnswerGenerationRequestDTO;
+import org.insurance.ai.dto.VectorSearchAnswerResponseDTO;
 import org.insurance.ai.llm.LlmFactory;
 import org.insurance.ai.service.AnswerGenerationService;
+import org.insurance.ai.service.VectorSearchAnswerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ public class AnswerController {
 
     @Autowired
     private AnswerGenerationService answerGenerationService;
+
+    @Autowired
+    private VectorSearchAnswerService vectorSearchAnswerService;
 
     @Autowired
     private LlmFactory llmFactory;
@@ -90,5 +95,43 @@ public class AnswerController {
         response.put("availableProviders", llmFactory.getAvailableProviders());
         response.put("hasAvailableProviders", llmFactory.hasAvailableProviders());
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/vector-search")
+    public ResponseEntity<Map<String, Object>> generateVectorSearchAnswer(@RequestBody AnswerGenerationRequestDTO request) {
+        logger.info("Received vector search answer generation request for question: {}", request.getQuestion());
+
+        try {
+            // Validate request
+            if (request.getQuestion() == null || request.getQuestion().trim().isEmpty()) {
+                Map<String, Object> error = new HashMap<>();
+                error.put("success", false);
+                error.put("error", "Question cannot be empty");
+                return ResponseEntity.badRequest().body(error);
+            }
+
+            // Generate vector search answer with sources
+            VectorSearchAnswerResponseDTO responseDTO = vectorSearchAnswerService.generateVectorSearchAnswer(request);
+
+            // Build response
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", "Vector search answer generated successfully");
+            response.put("answer", responseDTO.getAnswer());
+            response.put("sources", responseDTO.getSources());
+            response.put("question", request.getQuestion());
+            response.put("method", "vector_search");
+
+            logger.info("Vector search answer generation completed successfully");
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            logger.error("Failed to generate vector search answer: {}", e.getMessage(), e);
+
+            Map<String, Object> error = new HashMap<>();
+            error.put("success", false);
+            error.put("error", "Failed to generate vector search answer: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(error);
+        }
     }
 }
